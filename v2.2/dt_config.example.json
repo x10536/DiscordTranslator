@@ -1,0 +1,9 @@
+{
+  "apiKey": "",
+  "enabled": "1",
+  "debounce": "300",
+  "opacity": "0.75",
+  "model": "deepseek-chat",
+  "ballX": "",
+  "ballY": ""
+}
