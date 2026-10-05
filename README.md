@@ -4,17 +4,40 @@
 
 **鼠标悬停消息 → 原文正上方弹出半透明气泡显示译文，鼠标移开立刻消失。** 不用选中、不用复制、不用切窗口。
 
+**v2.5 起还多了「自动聊天翻译」**：聊天区来了新消息就自动出译文气泡，最多同时保留 6 条、每条 15 秒后淡出，只翻当前屏幕里看得见的。
+
 ---
 
 ## 三个版本
 
-按需要选一个下载即可。**没有特殊理由的话，直接下 v2.4。**
+按需要选一个下载即可。**没有特殊理由的话，直接下 v2.5。**
 
 | 版本 | 名称 | 适合谁 | 核心差异 |
 |---|---|---|---|
-| **v2.4** | **国际版（最新，推荐）** | **所有人** | 在 v2.3 基础上修掉悬浮球跑丢、启动偶发失败、设置"假成功"等问题 |
+| **v2.5** | **国际版（最新，推荐）** | **所有人** | 在 v2.4 基础上新增**自动聊天翻译** + 首次使用引导 |
+| v2.4 | 国际版 | 只用悬停翻译、不想换的 | 修掉悬浮球跑丢、启动偶发失败、设置"假成功"等问题 |
 | v2.3 | 国际版 | 需要多种语言、或给外国同事用 | 界面支持中/英，可翻译成 **13 种语言** |
 | v2.2 | 大陆国人版 | 只想把外文翻成中文的国内用户 | 界面中文，只能翻译成简体中文 |
+
+### v2.5 新增了什么
+
+**自动聊天翻译** —— 聊天区来了新消息就自动出译文气泡，不用鼠标。
+
+- **气泡贴在消息正上方**，并且**水平居中对齐到文字本身**，跟悬停气泡长得一模一样，会跟着聊天记录一起滚，不会错位
+- **最多同时保留 6 条**；第 7 条进来时，最旧的那条**渐变淡出**
+- **每条气泡最多停留 15 秒**，到期自动淡出（`dt_config.json` 里的 `autoTtl` 可改，单位毫秒）
+- **只翻当前屏幕里看得见的消息** —— 屏幕外翻了也没人看，气泡还会被挤到窗口边缘；滚进来之后会补翻
+- 刚进频道时会先把**屏幕上**已有的最新 6 条也翻一遍
+- **消息滚出屏幕，气泡立刻消失**（不做淡出，免得挤在窗口顶上）
+- **带「回复引用」的消息只翻正文**，被引用的那句话不翻 —— 否则同一句话会被翻两遍。想看被引用那句的译文，鼠标悬停到引用上即可
+- **转发消息照常翻**
+- **往上滚加载出来的旧消息不翻** —— 靠消息 ID 判断"是不是新来的"，免得一次打出几十个请求
+- 已经有自动气泡的消息，鼠标移上去**不会再弹悬停气泡**（两套气泡贴同一个位置，会叠成两层字）
+- **默认关闭**，右键悬浮球 → 「开启自动翻译」即可打开；**开关状态会记住**
+- 第一次跑 v2.5 会有一段**两步引导**：小手指着悬浮球提示新功能，右键点开后小手移到「自动翻译」上高亮，其余地方用半透明灰色蒙布遮住。**只出现一次**
+
+> **为什么不做「只翻别人发的」**：判断一条消息是不是自己发的，要读 Discord 内部的数据结构，
+> 那东西 Discord 一改版就失效，而且每条消息都要多判断一次、拖慢速度。所以现在**谁发的都翻**。
 
 ### v2.4 修了什么
 
@@ -44,9 +67,10 @@ v2.4 **没有加新功能**，全部是修真实使用中暴露出来的问题�
 
 到本仓库的 **[Releases](../../releases)** 页面下载：
 
-- `Discord翻译助手_v2.4_公开版.zip` —— **国际版（最新，推荐）**
-- `Discord翻译助手_v2.3_公开版.zip` —— 国际版
-- `Discord翻译助手_v2.2_公开版.zip` —— 大陆国人版
+- `DiscordTranslator_v2.5.zip` —— **国际版（最新，推荐，含自动聊天翻译）**
+- `DiscordTranslator_v2.4.zip` —— 国际版
+- `DiscordTranslator_v2.3.zip` —— 国际版
+- `DiscordTranslator_v2.2.zip` —— 大陆国人版
 
 下载后**解压到任意目录，双击 `launcher.exe`** 即可。无需安装，无需管理员权限。
 
@@ -93,7 +117,7 @@ v2.4 **没有加新功能**，全部是修真实使用中暴露出来的问题�
 ## 源码说明
 
 ```
-v2.4/                    ← 国际版最新源码（推荐从这里看）
+v2.5/                    ← 国际版最新源码（推荐从这里看）
 ├── inject.js            页面注入脚本（CDP 注入到 Discord）
 ├── launcher.py          启动器源码（负责开启调试端口 + 转发翻译请求）
 ├── README.md            该版本详细说明
@@ -101,6 +125,7 @@ v2.4/                    ← 国际版最新源码（推荐从这里看）
 ├── 方案文档.md           完整技术方案（含踩坑记录，适合给大模型看）
 └── dt_config.example.json  配置模板（把 Key 填进去改名成 dt_config.json 即可用）
 
+v2.4/                    ← 国际版源码（同上结构）
 v2.3/                    ← 国际版源码（同上结构）
 v2.2/                    ← 大陆国人版源码（同上结构）
 ```
@@ -137,9 +162,10 @@ Discord 是 Electron 应用，普通 Chrome 扩展在它上面不生效。本工
 
 **Discord Hover Translator** — hover over any message and a translation bubble appears above it. Move away and it disappears.
 
-Three builds are available — **just grab v2.4 unless you have a reason not to**:
+Three builds are available — **just grab v2.5 unless you have a reason not to**:
 
-- **v2.4 (International, latest, recommended)** — everything in v2.3, plus fixes for the floating ball drifting off-screen when the window is resized, occasional startup failures, and a "fake success" message when saving settings.
+- **v2.5 (International, latest, recommended)** — everything in v2.4, plus **auto chat translation**: new messages in the chat get translation bubbles automatically. Only messages **currently visible on screen** are translated; up to 6 bubbles at a time, oldest fades out, and each bubble auto-fades after **15 s**. Bubbles that scroll out of view are removed immediately. Messages that **quote a reply** only have their body translated (the quoted line is skipped, so the same text isn't translated twice); forwarded messages are translated as usual. Off by default, right-click the ball to enable; there is a one-time two-step onboarding hint on first run.
+- **v2.4 (International)** — fixes the floating ball drifting off-screen when the window is resized, occasional startup failures, and a "fake success" message when saving settings.
 - **v2.3 (International build)** — UI in Chinese/English, translates into **13 languages** (Chinese, English, Japanese, Korean, Russian, Spanish, French, German, Portuguese, Italian, Vietnamese, Thai, Arabic), with customizable bubble color and opacity.
 - **v2.2 (Mainland China build)** — Chinese UI, translates into Simplified Chinese only.
 

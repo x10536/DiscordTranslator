@@ -1,0 +1,16 @@
+{
+  "apiKey": "",
+  "enabled": "1",
+  "debounce": "300",
+  "opacity": "0.75",
+  "model": "deepseek-chat",
+  "uiLang": "zh",
+  "targetLang": "zh",
+  "bubbleBg": "#000000",
+  "ballRight": "",
+  "ballBottom": "",
+  "debugPort": "9333",
+  "autoTranslate": "0",
+  "autoTtl": "15000",
+  "guideDone": ""
+}
