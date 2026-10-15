@@ -6,18 +6,43 @@
 
 **v2.5 起还多了「自动聊天翻译」**：聊天区来了新消息就自动出译文气泡，最多同时保留 6 条、每条 15 秒后淡出，只翻当前屏幕里看得见的。
 
+**v2.6 起翻译接口可选**：DeepSeek / 通义千问 / Kimi / 智谱 GLM / 豆包 / 腾讯混元 / 硅基流动 / OpenAI / Gemini，外加「自定义」，各家的 Key 分开记。
+
 ---
 
-## 三个版本
+## 版本一览
 
-按需要选一个下载即可。**没有特殊理由的话，直接下 v2.5。**
+按需要选一个下载即可。**没有特殊理由的话，直接下 v2.6。**
 
 | 版本 | 名称 | 适合谁 | 核心差异 |
 |---|---|---|---|
-| **v2.5** | **国际版（最新，推荐）** | **所有人** | 在 v2.4 基础上新增**自动聊天翻译** + 首次使用引导 |
+| **v2.6** | **国际版（最新，推荐）** | **所有人** | 在 v2.5 基础上**翻译接口可选**（9 家 + 自定义）+ 智谱默认关思考链（更快） |
+| v2.5 | 国际版 | 只想用 DeepSeek 的 | 新增**自动聊天翻译** + 首次使用引导 |
 | v2.4 | 国际版 | 只用悬停翻译、不想换的 | 修掉悬浮球跑丢、启动偶发失败、设置"假成功"等问题 |
 | v2.3 | 国际版 | 需要多种语言、或给外国同事用 | 界面支持中/英，可翻译成 **13 种语言** |
 | v2.2 | 大陆国人版 | 只想把外文翻成中文的国内用户 | 界面中文，只能翻译成简体中文 |
+
+### v2.6 新增了什么
+
+**翻译接口可选** —— 设置面板里选一个「翻译接口」、填对应的 Key 就行，不再只能用 DeepSeek。
+
+| 接口 | 说明 |
+|---|---|
+| DeepSeek | 原来那个，默认 |
+| 通义千问 | 阿里云百炼，有免费额度 |
+| Kimi | 月之暗面 |
+| 智谱 GLM | 有免费额度；**本版默认关掉了它的「思考链」，实测快 1.5~2 倍** |
+| 豆包 | 火山方舟 |
+| 腾讯混元 | 腾讯云 |
+| 硅基流动 | 聚合平台，1 个 Key 用多家开源模型 |
+| OpenAI / Gemini | 国外，国内大多需要代理 |
+| 自定义 | 任何 OpenAI 兼容端点，自己填地址和模型名 |
+
+- **只走 OpenAI 兼容协议** —— 各家的「接口地址」和「模型名」都能改，填错也能自己修
+- **各家的 Key 分开记**，来回切换不用重填
+- **老配置自动升级**：原来只填过 DeepSeek Key 的，升级后照旧能用（配置里没有 `provider`/`baseUrl` 就自动回落 DeepSeek）
+- 报错文案通用化了：「余额不足 / 模型名不对 / 权限不足」分开提示，不再只提 DeepSeek
+- **没有动的**：翻译请求怎么发、怎么解析、悬停/自动两套气泡 —— 一行都没改
 
 ### v2.5 新增了什么
 
@@ -67,7 +92,8 @@ v2.4 **没有加新功能**，全部是修真实使用中暴露出来的问题�
 
 到本仓库的 **[Releases](../../releases)** 页面下载：
 
-- `DiscordTranslator_v2.5.zip` —— **国际版（最新，推荐，含自动聊天翻译）**
+- `DiscordTranslator_v2.6.zip` —— **国际版（最新，推荐，含多接口选择）**
+- `DiscordTranslator_v2.5.zip` —— 国际版
 - `DiscordTranslator_v2.4.zip` —— 国际版
 - `DiscordTranslator_v2.3.zip` —— 国际版
 - `DiscordTranslator_v2.2.zip` —— 大陆国人版
@@ -81,10 +107,11 @@ v2.4 **没有加新功能**，全部是修真实使用中暴露出来的问题�
 1. 解压压缩包
 2. **先打开 Discord**（保持登录状态）
 3. 双击 `launcher.exe`
-4. 右键托盘/悬浮球 → **设置** → 填入你的 **DeepSeek API Key** → 保存
+4. 右键悬浮球 → **设置** → 选一个**翻译接口**（默认 DeepSeek），填入对应的 **API Key** → 保存
 5. 回到 Discord，鼠标悬停任意外文消息，译文气泡就会出现
 
-> 本工具需要自己的 DeepSeek API Key（[在这里申请](https://platform.deepseek.com/)）。
+> 本工具需要你自己的 API Key。**任意一家都行** —— DeepSeek（[申请](https://platform.deepseek.com/)）、
+> 通义千问、Kimi、智谱 GLM、硅基流动 等都有免费额度，注册就能试。
 > 仓库内的 `dt_config.example.json` 是空白模板，把你的 Key 填进去改名成 `dt_config.json` 也行。
 
 ---
@@ -117,7 +144,7 @@ v2.4 **没有加新功能**，全部是修真实使用中暴露出来的问题�
 ## 源码说明
 
 ```
-v2.5/                    ← 国际版最新源码（推荐从这里看）
+v2.6/                    ← 国际版最新源码（推荐从这里看）
 ├── inject.js            页面注入脚本（CDP 注入到 Discord）
 ├── launcher.py          启动器源码（负责开启调试端口 + 转发翻译请求）
 ├── README.md            该版本详细说明
@@ -125,6 +152,7 @@ v2.5/                    ← 国际版最新源码（推荐从这里看）
 ├── 方案文档.md           完整技术方案（含踩坑记录，适合给大模型看）
 └── dt_config.example.json  配置模板（把 Key 填进去改名成 dt_config.json 即可用）
 
+v2.5/                    ← 国际版源码（同上结构）
 v2.4/                    ← 国际版源码（同上结构）
 v2.3/                    ← 国际版源码（同上结构）
 v2.2/                    ← 大陆国人版源码（同上结构）
@@ -162,14 +190,15 @@ Discord 是 Electron 应用，普通 Chrome 扩展在它上面不生效。本工
 
 **Discord Hover Translator** — hover over any message and a translation bubble appears above it. Move away and it disappears.
 
-Three builds are available — **just grab v2.5 unless you have a reason not to**:
+Four builds are available — **just grab v2.6 unless you have a reason not to**:
 
-- **v2.5 (International, latest, recommended)** — everything in v2.4, plus **auto chat translation**: new messages in the chat get translation bubbles automatically. Only messages **currently visible on screen** are translated; up to 6 bubbles at a time, oldest fades out, and each bubble auto-fades after **15 s**. Bubbles that scroll out of view are removed immediately. Messages that **quote a reply** only have their body translated (the quoted line is skipped, so the same text isn't translated twice); forwarded messages are translated as usual. Off by default, right-click the ball to enable; there is a one-time two-step onboarding hint on first run.
+- **v2.6 (International, latest, recommended)** — everything in v2.5, plus **selectable translation provider**: DeepSeek, Qwen, Kimi, Zhipu GLM, Doubao, Tencent Hunyuan, SiliconFlow, OpenAI, Gemini, or your own OpenAI-compatible endpoint. Each provider keeps its own API key. Older configs upgrade seamlessly (missing `provider`/`baseUrl` falls back to DeepSeek). Zhipu's "thinking" mode is disabled by default for speed.
+- **v2.5 (International)** — everything in v2.4, plus **auto chat translation**: new messages in the chat get translation bubbles automatically. Only messages **currently visible on screen** are translated; up to 6 bubbles at a time, oldest fades out, and each bubble auto-fades after **15 s**. Bubbles that scroll out of view are removed immediately. Messages that **quote a reply** only have their body translated (the quoted line is skipped, so the same text isn't translated twice); forwarded messages are translated as usual. Off by default, right-click the ball to enable; there is a one-time two-step onboarding hint on first run.
 - **v2.4 (International)** — fixes the floating ball drifting off-screen when the window is resized, occasional startup failures, and a "fake success" message when saving settings.
 - **v2.3 (International build)** — UI in Chinese/English, translates into **13 languages** (Chinese, English, Japanese, Korean, Russian, Spanish, French, German, Portuguese, Italian, Vietnamese, Thai, Arabic), with customizable bubble color and opacity.
 - **v2.2 (Mainland China build)** — Chinese UI, translates into Simplified Chinese only.
 
-Download the zip you need from the **[Releases](../../releases)** page, extract it anywhere, and run `launcher.exe`. You will need your own [DeepSeek API key](https://platform.deepseek.com/).
+Download the zip you need from the **[Releases](../../releases)** page, extract it anywhere, and run `launcher.exe`. You will need your own API key from **any** of the supported providers (DeepSeek, Qwen, Kimi, Zhipu GLM and SiliconFlow all offer free tiers).
 
 ---
 
